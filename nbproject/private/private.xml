@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-private xmlns="http://www.netbeans.org/ns/project-private/1">
+    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
+    <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
+        <group>
+            <file>file:/E:/POS/src/ui/Category.java</file>
+            <file>file:/E:/POS/src/data/CategoryDAO.java</file>
+            <file>file:/E:/POS/src/data/ProductDAO.java</file>
+            <file>file:/E:/POS/src/business/ProductModel.java</file>
+            <file>file:/E:/POS/src/ui/AddCategory.java</file>
+            <file>file:/E:/POS/src/business/Manager.java</file>
+            <file>file:/E:/POS/src/ui/SAHome.java</file>
+            <file>file:/E:/POS/src/business/UserService.java</file>
+            <file>file:/E:/POS/src/ui/AddProduct.java</file>
+            <file>file:/E:/POS/src/ui/Product.java</file>
+            <file>file:/E:/POS/src/business/SalesAssistant.java</file>
+            <file>file:/E:/POS/src/ui/Cart.java</file>
+            <file>file:/E:/POS/build/built-jar.properties</file>
+            <file>file:/E:/POS/src/ui/AdminHome.java</file>
+            <file>file:/E:/POS/src/business/CategoryService.java</file>
+            <file>file:/E:/POS/src/data/DatabaseConnection.java</file>
+            <file>file:/E:/POS/src/business/ProductService.java</file>
+            <file>file:/E:/POS/src/ui/AddToCart.java</file>
+            <file>file:/E:/POS/src/ui/LogIn.java</file>
+            <file>file:/E:/POS/src/business/User.java</file>
+            <file>file:/E:/POS/src/data/UserDao.java</file>
+            <file>file:/E:/POS/src/business/CategoryModel.java</file>
+        </group>
+    </open-files>
+</project-private>
