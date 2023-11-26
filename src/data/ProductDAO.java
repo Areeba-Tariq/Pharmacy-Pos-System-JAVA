@@ -101,9 +101,9 @@ public class ProductDAO {
             e.printStackTrace();
             // Handle exceptions accordingly
         }
-
         return products;
     }
+    /*Coment */
 
     // Add product to a specific category in the database
     public void addProductToCategory(ProductModel product, CategoryModel category) {
@@ -117,6 +117,5 @@ public class ProductDAO {
             e.printStackTrace();
             // Handle exceptions accordingly
         }
-    }
-    
+    }    
 }
