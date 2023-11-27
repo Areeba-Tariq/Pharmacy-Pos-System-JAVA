@@ -116,6 +116,7 @@ public class AdminHome extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void ProductBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ProductBtnActionPerformed
+        product.setVisible(true);
         product.populateProductTable();
     }//GEN-LAST:event_ProductBtnActionPerformed
 
@@ -132,6 +133,7 @@ public class AdminHome extends javax.swing.JFrame {
     }//GEN-LAST:event_signUpBtnActionPerformed
 
     private void categoryBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_categoryBtnActionPerformed
+        category.setVisible(true); // Show the Category screen
         category.populateCategoryTable();
     }//GEN-LAST:event_categoryBtnActionPerformed
 
