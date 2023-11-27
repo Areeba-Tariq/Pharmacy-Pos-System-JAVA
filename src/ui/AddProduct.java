@@ -129,18 +129,16 @@ public class AddProduct extends JFrame {
             int validity = Integer.parseInt(exptf.getText());
 
             ProductModel newProduct = new ProductModel(sn, price, quantity, validity, name, description);
+            CategoryDAO categoryDAO = new CategoryDAO();
             List<CategoryModel> categories = categoryDAO.getCategories();
 
-            // Iterating through all the checkboxes and checking if they are selected
             for (Component component : checkboxes.getComponents()) {
                 if (component instanceof JCheckBox) {
                     JCheckBox checkBox = (JCheckBox) component;
                     if (checkBox.isSelected()) {
-                        // Finding the corresponding category and adding the product to it
-                        for (CategoryModel category : categories) {
-                            if (checkBox.getText().equals(category.getName())) {
-                                categoryDAO.addProductToCategory(newProduct, category);
-                            }
+                        CategoryModel selectedCategory = categoryDAO.getCategoryByName(checkBox.getText());
+                        if (selectedCategory != null) {
+                            categoryDAO.addProductToCategory(newProduct, selectedCategory);
                         }
                     }
                 }
@@ -163,6 +161,7 @@ public class AddProduct extends JFrame {
     
     private void initializeCategoryCheckboxes() {
 
+        CategoryDAO categoryDAO = new CategoryDAO();
         List<CategoryModel> categories = categoryDAO.getCategories();
 
         // Use a GridLayout to manage checkboxes dynamically

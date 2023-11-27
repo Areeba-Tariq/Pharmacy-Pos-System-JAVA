@@ -67,7 +67,6 @@ public class CategoryDAO {
     }
     
     public void addProductToCategory(ProductModel product, CategoryModel category) {
-        category.addProduct(product); // Add product to the category's list of products
         try (PreparedStatement statement = connection.prepareStatement("INSERT INTO product_category(category_sn, product_sn) VALUES (?, ?)")) {
             statement.setInt(1, category.getSn());
             statement.setInt(2, product.getSn());
@@ -78,7 +77,6 @@ public class CategoryDAO {
     }
 
     public void removeProductFromCategory(ProductModel product, CategoryModel category) {
-        category.removeProduct(product); // Remove product from the category's list of products
         try (PreparedStatement statement = connection.prepareStatement("DELETE FROM product_category WHERE category_sn = ? AND product_sn = ?")) {
             statement.setInt(1, category.getSn());
             statement.setInt(2, product.getSn());
@@ -87,17 +85,21 @@ public class CategoryDAO {
             throw new RuntimeException("Error removing product from the category in the database", ex);
         }
     }
-    
+
     public CategoryModel getCategoryByName(String name) {
-        for (CategoryModel category : categories) {
-            if (category.getName().equalsIgnoreCase(name)) {
-                return category;
+        try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM category WHERE name = ?")) {
+            statement.setString(1, name);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                int sn = resultSet.getInt("sn");
+                String description = resultSet.getString("description");
+                return new CategoryModel(sn, name, description);
             }
+        } catch (SQLException ex) {
+            throw new RuntimeException("Error fetching category from the database", ex);
         }
         return null;
     }
-
-
 }
 
 
