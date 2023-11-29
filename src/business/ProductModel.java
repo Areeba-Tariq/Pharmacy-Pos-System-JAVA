@@ -11,19 +11,17 @@ public class ProductModel {
     private int price;
     private int quantity;
     private String name;
-    private String category;
     private String description;
-    private List<CategoryModel> categories;
     private int validity;
+    private List<CategoryModel> categories;
 
-    public ProductModel(int sn,  int price, int quantity, int validity, String name, String description) {
+    public ProductModel(int sn,  String name, String description, int price, int quantity, int validity) {
         this.sn = sn;
         this.name = name;
         this.description = description;
         this.price = price;
         this.quantity = quantity;
         this.validity = validity;
-        this.categories = new ArrayList<>();
     }
 
     public int getSn() {
@@ -53,10 +51,7 @@ public class ProductModel {
     public int getQuantity() {
         return quantity;
     }
-    
-    public void setCategory(String category) {
-        this.category = category;
-    }
+
     
     public void setQuantity(int quantity) {
         this.quantity = quantity;
@@ -78,16 +73,14 @@ public class ProductModel {
         this.description = description;
     }
     
-    public List<String> getCategories() {
-        List<String> categoryNames = new ArrayList<>();
-        for (CategoryModel category : categories) {
-            categoryNames.add(category.getName());
-        }
-        return categoryNames;
+    // Method to get categories associated with the product
+    public List<CategoryModel> getCategories() {
+        return this.categories;
     }
 
-    public void addCategory(CategoryModel category) {
-        categories.add(category);
+    // Method to set categories for the product
+    public void setCategories(List<CategoryModel> categories) {
+        this.categories = categories;
     }
  
 }

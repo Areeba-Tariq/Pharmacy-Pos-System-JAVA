@@ -1,6 +1,7 @@
 package ui;
 import business.ProductService;
 import business.ProductModel;
+import data.ProductDAO;
 import java.util.List;
 import javax.swing.table.DefaultTableModel;
 
@@ -64,7 +65,6 @@ public class Product extends javax.swing.JFrame {
         if (productTable.getColumnModel().getColumnCount() > 0) {
             productTable.getColumnModel().getColumn(0).setResizable(false);
             productTable.getColumnModel().getColumn(1).setResizable(false);
-            productTable.getColumnModel().getColumn(2).setResizable(false);
             productTable.getColumnModel().getColumn(3).setResizable(false);
             productTable.getColumnModel().getColumn(4).setResizable(false);
             productTable.getColumnModel().getColumn(5).setResizable(false);
@@ -99,6 +99,10 @@ public class Product extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(265, 265, 265))
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
@@ -109,13 +113,9 @@ public class Product extends javax.swing.JFrame {
                         .addGap(78, 78, 78)
                         .addComponent(delBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(52, 52, 52)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 559, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(75, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(265, 265, 265))
+                        .addGap(24, 24, 24)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 679, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(21, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -136,7 +136,10 @@ public class Product extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void editBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editBtnActionPerformed
-        // TODO add your handling code here:
+        java.awt.EventQueue.invokeLater(() -> {
+            new AddProduct().setVisible(true);
+                populateProductTable();
+        });
     }//GEN-LAST:event_editBtnActionPerformed
 
     private void delBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_delBtnActionPerformed
@@ -176,32 +179,32 @@ public class Product extends javax.swing.JFrame {
         return null; // Return null if not found
     }
     
+    
+    // Inside Product.java class
     public void populateProductTable() {
+        ProductDAO productDAO = new ProductDAO();
+        products = productDAO.getProducts();
+
         DefaultTableModel model = (DefaultTableModel) productTable.getModel();
-        model.setRowCount(0); // Clear the existing rows
+        model.setRowCount(0); // Clear the existing rows from the table
 
-        // Create an instance of ProductService
-        ProductService productService = new ProductService();
-
-        // Fetch products using an instance of ProductService
-        List<ProductModel> products = productService.getProducts();
-
-        // Populate the table with product data
         for (ProductModel product : products) {
-            List<String> categories = product.getCategories(); // Assuming getCategory() returns a List<String>
-            String categoryString = String.join(", ", categories); // Join categories with comma separation
+            List<String> categoriesForProduct = productDAO.getCategoriesForProduct(product);
+            String categoryList = String.join(", ", categoriesForProduct);
 
-            Object[] row = {
+            Object[] rowData = {
                 product.getSn(),
                 product.getName(),
+                categoryList, // Categories as a comma-separated string
                 product.getPrice(),
-                categoryString, // Display categories as comma-separated string
                 product.getQuantity(),
+                product.getValidity(),
                 product.getDescription()
             };
-            model.addRow(row);
+            model.addRow(rowData);
         }
     }
+
 
     
     public static void main(String args[]) {

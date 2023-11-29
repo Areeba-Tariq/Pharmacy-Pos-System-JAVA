@@ -17,7 +17,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 
-public class AddProduct extends JFrame {
+public class EditProduct extends JFrame {
 
     private ProductService productService;
     private final CategoryDAO categoryDAO;
@@ -29,21 +29,19 @@ public class AddProduct extends JFrame {
     JTextField desctf = new JTextField();
     private final JPanel checkboxes;    
     private final JPanel btnPanel;
-    private final ProductDAO productDAO;
     
-     public AddProduct() {
+     public EditProduct() {
         categoryDAO = new CategoryDAO();
         checkboxes = new JPanel(); // Initialize checkboxes here
         btnPanel = new JPanel();
         initComponents(); // Move initComponents after initializing checkboxes
         productService = new ProductService();
-        productDAO = new ProductDAO();
     }
 
 
     private void initComponents() {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Add Product");
+        setTitle("Edit Product");
         setLayout(new BorderLayout()); // Use BorderLayout
 
         JPanel formPanel = new JPanel();
@@ -105,12 +103,12 @@ public class AddProduct extends JFrame {
 
         initializeCategoryCheckboxes();
 
-        JButton addbtn = new JButton("ADD");
+        JButton addbtn = new JButton("DONE");
         addbtn.setBackground(new java.awt.Color(0, 153, 204));
         addbtn.setBounds(150, 10, 70, 40);
 
         // Add ActionListener to the button
-        addbtn.addActionListener(e -> addBtnActionPerformed(e));
+        addbtn.addActionListener(e -> editBtnActionPerformed(e));
        
         JScrollPane scrollPane = new JScrollPane(checkboxes);
         scrollPane.setBounds(50, 330, 300, 80);
@@ -123,7 +121,7 @@ public class AddProduct extends JFrame {
     }
 
     
-    private void addBtnActionPerformed(java.awt.event.ActionEvent evt) {
+    private void editBtnActionPerformed(java.awt.event.ActionEvent evt) {
     // Extracting input values from the text fields
     int sn, price, quantity, validity;
     String name, description;
@@ -141,7 +139,7 @@ public class AddProduct extends JFrame {
     }
 
     ProductModel newProduct = new ProductModel(sn, name, description, price, quantity, validity);
-    productService.addProduct(newProduct);
+    productService.updateProduct(newProduct);
     CategoryDAO categoryDAO = new CategoryDAO();
     List<CategoryModel> categories = categoryDAO.getCategories();
 
@@ -152,7 +150,7 @@ public class AddProduct extends JFrame {
                 String categoryName = checkBox.getText();
                 CategoryModel selectedCategory = categoryDAO.getCategoryByName(categoryName);
                 if (selectedCategory != null) {
-                    productDAO.addProductToCategory(newProduct, selectedCategory);
+                    productService.updateProduct(newProduct);
                 }
             }
         }
@@ -165,7 +163,7 @@ public class AddProduct extends JFrame {
     desctf.setText("");
     exptf.setText("");
 
-    javax.swing.JOptionPane.showMessageDialog(this, "Product added successfully!");
+    javax.swing.JOptionPane.showMessageDialog(this, "Product updated successfully!");
     this.dispose();
 }
 

@@ -47,37 +47,97 @@ public class ProductDAO {
         }
     }
 
-    // Update product in the database
-    public void updateProduct(ProductModel product) {
-        String updateProductQuery = "UPDATE product SET name=?, description=?, price=?, quantity=?, validity=? WHERE sn=?";
+    
 
-        try (PreparedStatement preparedStatement = connection.prepareStatement(updateProductQuery)) {
-            preparedStatement.setString(1, product.getName());
-            preparedStatement.setString(2, product.getDescription());
-            preparedStatement.setInt(3, product.getPrice());
-            preparedStatement.setInt(4, product.getQuantity());
-            preparedStatement.setInt(5, product.getValidity());
-            preparedStatement.setInt(6, product.getSn());
-            preparedStatement.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-            // Handle exceptions accordingly
-        }
-    }
-
-    // Delete product from the database
+    // Delete product from the database including its references in Product_Category table
     public void deleteProduct(ProductModel product) {
+        String deleteFromProductCategoryQuery = "DELETE FROM Product_Category WHERE product_sn=?";
         String deleteProductQuery = "DELETE FROM product WHERE sn=?";
 
-        try (PreparedStatement preparedStatement = connection.prepareStatement(deleteProductQuery)) {
-            preparedStatement.setInt(1, product.getSn());
-            preparedStatement.executeUpdate();
+        try (PreparedStatement deleteFromProductCategoryStatement = connection.prepareStatement(deleteFromProductCategoryQuery);
+             PreparedStatement deleteProductStatement = connection.prepareStatement(deleteProductQuery)) {
+
+            connection.setAutoCommit(false);
+
+            // Delete references to the product in the Product_Category table
+            deleteFromProductCategoryStatement.setInt(1, product.getSn());
+            deleteFromProductCategoryStatement.executeUpdate();
+
+            // Delete the product from the Product table
+            deleteProductStatement.setInt(1, product.getSn());
+            deleteProductStatement.executeUpdate();
+
+            connection.commit();
         } catch (SQLException e) {
+            try {
+                if (connection != null) {
+                    connection.rollback();
+                }
+            } catch (SQLException ex) {
+                e.printStackTrace();
+            }
             e.printStackTrace();
             // Handle exceptions accordingly
+        } finally {
+            try {
+                if (connection != null) {
+                    connection.setAutoCommit(true);
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+    
+    
+    public void updateProduct(ProductModel product) {
+        String updateProductQuery = "UPDATE product SET name=?, description=?, price=?, quantity=?, validity=? WHERE sn=?";
+        String deleteFromProductCategoryQuery = "DELETE FROM Product_Category WHERE product_sn=?";
+        String addProductToCategoryQuery = "INSERT INTO Product_Category (product_sn, category_sn) VALUES (?, ?)";
+
+        try (PreparedStatement updateProductStatement = connection.prepareStatement(updateProductQuery);
+             PreparedStatement deleteFromProductCategoryStatement = connection.prepareStatement(deleteFromProductCategoryQuery);
+             PreparedStatement addProductToCategoryStatement = connection.prepareStatement(addProductToCategoryQuery)) {
+
+            connection.setAutoCommit(false);
+
+            // Update product details in the Product table
+            updateProductStatement.setString(1, product.getName());
+            updateProductStatement.setString(2, product.getDescription());
+            updateProductStatement.setInt(3, product.getPrice());
+            updateProductStatement.setInt(4, product.getQuantity());
+            updateProductStatement.setInt(5, product.getValidity());
+            updateProductStatement.setInt(6, product.getSn());
+            updateProductStatement.executeUpdate();
+
+            // Delete existing references to the product in the Product_Category table
+            deleteFromProductCategoryStatement.setInt(1, product.getSn());
+            deleteFromProductCategoryStatement.executeUpdate();
+
+            connection.commit();
+        } catch (SQLException e) {
+            try {
+                if (connection != null) {
+                    connection.rollback();
+                }
+            } catch (SQLException ex) {
+                e.printStackTrace();
+            }
+            e.printStackTrace();
+            // Handle exceptions accordingly
+        } finally {
+            try {
+                if (connection != null) {
+                    connection.setAutoCommit(true);
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
+
+    
     // Get all products from the database
     public List<ProductModel> getProducts() {
         List<ProductModel> products = new ArrayList<>();
@@ -94,7 +154,7 @@ public class ProductDAO {
                 int quantity = resultSet.getInt("quantity");
                 int validity = resultSet.getInt("validity");
 
-                ProductModel product = new ProductModel(sn, price, quantity, validity, name, description);
+                ProductModel product = new ProductModel(sn, name, description, price, quantity, validity);
                 products.add(product);
             }
         } catch (SQLException e) {
@@ -103,19 +163,38 @@ public class ProductDAO {
         }
         return products;
     }
-    /*Coment */
-
-    // Add product to a specific category in the database
+    
+    
+    // Inside ProductDAO class
     public void addProductToCategory(ProductModel product, CategoryModel category) {
-        String insertProductCategoryQuery = "INSERT INTO product_category (product_sn, category_name) VALUES (?, ?)";
+        String addProductToCategoryQuery = "INSERT INTO Product_Category (product_sn, category_sn) VALUES (?, ?)";
 
-        try (PreparedStatement preparedStatement = connection.prepareStatement(insertProductCategoryQuery)) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(addProductToCategoryQuery)) {
             preparedStatement.setInt(1, product.getSn());
-            preparedStatement.setString(2, category.getName());
+            preparedStatement.setInt(2, category.getSn());
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
-            // Handle exceptions accordingly
         }
-    }    
+    }
+    
+    
+    // Inside ProductDAO class
+    public List<String> getCategoriesForProduct(ProductModel product) {
+        List<String> categoriesForProduct = new ArrayList<>();
+        String selectCategoriesForProductQuery = "SELECT category.name FROM Category category INNER JOIN Product_Category pc ON category.sn = pc.category_sn WHERE pc.product_sn = ?";
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(selectCategoriesForProductQuery)) {
+            preparedStatement.setInt(1, product.getSn());
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                String categoryName = resultSet.getString("name");
+                categoriesForProduct.add(categoryName);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return categoriesForProduct;
+    }
 }

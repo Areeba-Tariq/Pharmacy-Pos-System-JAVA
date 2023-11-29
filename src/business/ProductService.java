@@ -17,12 +17,6 @@ public class ProductService {
 
     public void addProduct(ProductModel p) {
         pdao.addProduct(p);
-        for (String categoryName : p.getCategories()) {
-            CategoryModel category = categoryDAO.getCategoryByName(categoryName);
-            if (category != null) {
-                pdao.addProductToCategory(p, category);
-            }
-        }
     }
 
     public void delProduct(ProductModel p){
@@ -38,6 +32,3 @@ public class ProductService {
     }
  
 }
-
-
-

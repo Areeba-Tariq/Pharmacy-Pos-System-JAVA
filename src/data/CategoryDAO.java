@@ -14,13 +14,11 @@ import business.ProductModel;
 
 public class CategoryDAO {
 
-    private List<CategoryModel> categories;
     private Connection connection = null;
     public Statement st;
 
     public CategoryDAO() {
         // Initialize the list of categories (this can be retrieved from a database as well)
-        categories = new ArrayList<>();
         try {
             this.connection = DatabaseConnection.getConnection();
             st = connection.createStatement();

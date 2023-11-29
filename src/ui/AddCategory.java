@@ -152,7 +152,6 @@ public class AddCategory extends javax.swing.JFrame {
 
         // Create a new Category instance with the retrieved data
         CategoryModel newCategory = new CategoryModel(sn, name, description);
-        System.out.println("1");
         categoryService.addCategory(newCategory);
         if (category != null) {
             category._AddRow(newCategory);
