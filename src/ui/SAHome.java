@@ -3,9 +3,6 @@ package ui;
 
 public class SAHome extends javax.swing.JFrame {
 
-    /**
-     * Creates new form SAHome
-     */
     public SAHome() {
         initComponents();
     }
