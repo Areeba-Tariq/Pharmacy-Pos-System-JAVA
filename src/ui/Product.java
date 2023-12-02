@@ -136,12 +136,20 @@ public class Product extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void editBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editBtnActionPerformed
-        java.awt.EventQueue.invokeLater(() -> {
-            new AddProduct().setVisible(true);
-                populateProductTable();
-        });
+         
+        int selectedRow = productTable.getSelectedRow();
+        if (selectedRow != -1) {
+            int sn = (int) productTable.getValueAt(selectedRow, 0); // Assuming SN is in the first column
+
+            EditProduct editProduct = new EditProduct();
+            editProduct.populateProductDetails(sn); // Pass the SN to the EditProduct screen for editing
+            editProduct.setVisible(true);
+        }
     }//GEN-LAST:event_editBtnActionPerformed
 
+    
+    
+    
     private void delBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_delBtnActionPerformed
         int selectedRow = productTable.getSelectedRow();
         if (selectedRow != -1) { // Ensure a row is selected

@@ -119,6 +119,7 @@ public class LogIn extends javax.swing.JFrame {
 
     private void loginBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginBtnActionPerformed
 
+                userService=new UserService();
                 String username = nametf.getText();
                 char[] password = passwordtf.getPassword();
                 String passwordText = new String(password);

@@ -15,6 +15,7 @@ public class Category extends javax.swing.JFrame {
         
         // Add a listener to the table to handle row selection
         categoryTable.getSelectionModel().addListSelectionListener(e -> {
+            // Enable or disable the delete button based on row selection
             if (!categoryTable.getSelectionModel().isSelectionEmpty()) {
                 delBtn.setEnabled(true);
             } else {
@@ -135,11 +136,15 @@ public class Category extends javax.swing.JFrame {
 
     private void delBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_delBtnActionPerformed
         int selectedRow = categoryTable.getSelectedRow();
-        if (selectedRow != -1) {
-            int sn = (int) categoryTable.getValueAt(selectedRow, 0);
+        if (selectedRow != -1) { // Ensure a row is selected
+            // Retrieve the category data from the selected row
+            int sn = (int) categoryTable.getValueAt(selectedRow, 0); // Assuming SN is in the first column
 
+            // Delete the row from the table
             DefaultTableModel model = (DefaultTableModel) categoryTable.getModel();
             model.removeRow(selectedRow);
+
+            // Delete the row from the database
             CategoryService categoryService = new CategoryService();
             CategoryModel categoryToDelete = getCategoryBySN(sn);
             if (categoryToDelete != null) {
@@ -148,31 +153,35 @@ public class Category extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_delBtnActionPerformed
 
-    
     private void addBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addBtnActionPerformed
-        java.awt.EventQueue.invokeLater(() -> {
-            AddCategory addCategory = new AddCategory(this); // Pass 'this' as a reference
-            addCategory.setVisible(true);
+            java.awt.EventQueue.invokeLater(() -> {
+            new AddCategory().setVisible(true);
             populateCategoryTable();
-        });
+    });
     }//GEN-LAST:event_addBtnActionPerformed
 
     
     private CategoryModel getCategoryBySN(int sn) {
+        // Find and return the CategoryDAO object by its SN
         for (CategoryModel category : categories) {
             if (category.getSn() == sn) {
                 return category;
             }
         }
-        return null;
+        return null; // Return null if not found
     }
-    
     
     public void populateCategoryTable() {
         model = (DefaultTableModel) categoryTable.getModel();
-        model.setRowCount(0);
+        model.setRowCount(0); // Clear the existing rows
+
+        // Create an instance of CategoryService
         CategoryService categoryService = new CategoryService();
+
+        // Fetch categories using an instance of CategoryService
         categories = categoryService.getCategories();
+
+        // Populate the table with category data
         for (CategoryModel category : categories) {
             Object[] row = { category.getSn(), category.getName(), category.getDescription() };
             model.addRow(row);
@@ -186,8 +195,16 @@ public class Category extends javax.swing.JFrame {
     }
 
     
+    /**
+     * @param args the command line arguments
+     */
     public static void main(String args[]) {
+           /* Set the Nimbus look and feel */
+           //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+           // ...
+           //</editor-fold>
 
+           /* Create and display the form */
            java.awt.EventQueue.invokeLater(new Runnable() {
                public void run() {
                    new Category().setVisible(true);

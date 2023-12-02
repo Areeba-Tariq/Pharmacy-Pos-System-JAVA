@@ -74,30 +74,54 @@ public class CategoryDAO {
         }
     }
 
-    public void removeProductFromCategory(ProductModel product, CategoryModel category) {
-        try (PreparedStatement statement = connection.prepareStatement("DELETE FROM product_category WHERE category_sn = ? AND product_sn = ?")) {
-            statement.setInt(1, category.getSn());
-            statement.setInt(2, product.getSn());
-            statement.executeUpdate();
-        } catch (SQLException ex) {
-            throw new RuntimeException("Error removing product from the category in the database", ex);
-        }
-    }
 
-    public CategoryModel getCategoryByName(String name) {
-        try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM category WHERE name = ?")) {
-            statement.setString(1, name);
-            ResultSet resultSet = statement.executeQuery();
+
+   public CategoryModel getCategoryByName(String categoryName) {
+        String selectCategoryQuery = "SELECT * FROM Category WHERE name = ?";
+        CategoryModel category = null;
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(selectCategoryQuery)) {
+            preparedStatement.setString(1, categoryName);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
             if (resultSet.next()) {
                 int sn = resultSet.getInt("sn");
+                // Assuming other attributes of CategoryModel here
                 String description = resultSet.getString("description");
-                return new CategoryModel(sn, name, description);
+
+                // Create a new CategoryModel object with retrieved data
+                category = new CategoryModel(sn, categoryName, description);
             }
-        } catch (SQLException ex) {
-            throw new RuntimeException("Error fetching category from the database", ex);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            // Handle exceptions accordingly
         }
-        return null;
+
+        return category;
     }
+    
+     public List<CategoryModel> getCategoriesForProduct(ProductModel product) {
+        List<CategoryModel> categoriesForProduct = new ArrayList<>();
+        String selectCategoriesForProductQuery = "SELECT category.* FROM Category category INNER JOIN Product_Category pc ON category.sn = pc.category_sn WHERE pc.product_sn = ?";
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(selectCategoriesForProductQuery)) {
+            preparedStatement.setInt(1, product.getSn());
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                int sn = resultSet.getInt("sn");
+                String categoryName = resultSet.getString("name");
+                String desc = resultSet.getString("desc");
+                CategoryModel category = new CategoryModel(sn, categoryName, desc);
+                categoriesForProduct.add(category);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            // Handle exceptions accordingly
+        }
+        return categoriesForProduct;
+    }
+    
 }
 
 

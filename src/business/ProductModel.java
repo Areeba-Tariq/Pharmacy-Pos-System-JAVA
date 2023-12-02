@@ -24,6 +24,10 @@ public class ProductModel {
         this.validity = validity;
     }
 
+    public ProductModel(int sn, int price, int Quantity, String name2, String category, String description) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
     public int getSn() {
         return sn;
     }

@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UserDao {
+    private Connection connection = null;
     void Save(User u)
     {
         //save user
@@ -16,12 +17,10 @@ public class UserDao {
     public List<User> getUsers(){
         List<User>userList=new ArrayList<>(5);
         try {
-            Connection connection = DriverManager.getConnection(
-                    "jdbc:mysql://127.0.0.1:3306/posdb",
-                    "root", "root123"
-            );
+            
+            this.connection = DatabaseConnection.getConnection();
             Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery("Select * from user");
+            ResultSet resultSet = statement.executeQuery("Select * from user1");
             while (resultSet.next()) {
                 User user = new User((resultSet.getString("name")),(resultSet.getString("password")),(resultSet.getString("role")));
                 System.out.println(resultSet.getString("name"));

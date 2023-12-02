@@ -3,6 +3,7 @@ package data;
 import business.CategoryModel;
 import business.ProductModel;
 import data.DatabaseConnection;
+import data.CategoryDAO;
 import java.util.ArrayList;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -15,6 +16,7 @@ import java.util.List;
 public class ProductDAO {
  
     private List<ProductModel> products;
+    CategoryDAO categoryDAO = new CategoryDAO();
     private Connection connection = null;
     public Statement st;
 
@@ -90,17 +92,18 @@ public class ProductDAO {
     }
     
     
-    public void updateProduct(ProductModel product) {
+    public void updateProduct(ProductModel product, List<String> selectedCategories) {
         String updateProductQuery = "UPDATE product SET name=?, description=?, price=?, quantity=?, validity=? WHERE sn=?";
         String deleteFromProductCategoryQuery = "DELETE FROM Product_Category WHERE product_sn=?";
         String addProductToCategoryQuery = "INSERT INTO Product_Category (product_sn, category_sn) VALUES (?, ?)";
 
+        
+        System.out.println("---1");
         try (PreparedStatement updateProductStatement = connection.prepareStatement(updateProductQuery);
              PreparedStatement deleteFromProductCategoryStatement = connection.prepareStatement(deleteFromProductCategoryQuery);
              PreparedStatement addProductToCategoryStatement = connection.prepareStatement(addProductToCategoryQuery)) {
 
             connection.setAutoCommit(false);
-
             // Update product details in the Product table
             updateProductStatement.setString(1, product.getName());
             updateProductStatement.setString(2, product.getDescription());
@@ -113,6 +116,16 @@ public class ProductDAO {
             // Delete existing references to the product in the Product_Category table
             deleteFromProductCategoryStatement.setInt(1, product.getSn());
             deleteFromProductCategoryStatement.executeUpdate();
+
+            // Insert the product into the Product_Category table with selected categories
+            for (String categoryName : selectedCategories) {
+                CategoryModel category = categoryDAO.getCategoryByName(categoryName); // Assuming you have a method to retrieve a category by name
+                if (category != null) {
+                    addProductToCategoryStatement.setInt(1, product.getSn());
+                    addProductToCategoryStatement.setInt(2, category.getSn());
+                    addProductToCategoryStatement.executeUpdate();
+                }
+            }
 
             connection.commit();
         } catch (SQLException e) {
@@ -135,7 +148,6 @@ public class ProductDAO {
             }
         }
     }
-
 
     
     // Get all products from the database
@@ -162,12 +174,12 @@ public class ProductDAO {
             // Handle exceptions accordingly
         }
         return products;
-    }
-    
+    }  
+   
     
     // Inside ProductDAO class
     public void addProductToCategory(ProductModel product, CategoryModel category) {
-        String addProductToCategoryQuery = "INSERT INTO Product_Category (product_sn, category_sn) VALUES (?, ?)";
+        String addProductToCategoryQuery = "INSERT INTO Product_Category (product_sn,category_sn) VALUES (?, ?)";
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(addProductToCategoryQuery)) {
             preparedStatement.setInt(1, product.getSn());
@@ -179,6 +191,34 @@ public class ProductDAO {
     }
     
     
+    
+    public ProductModel getProductBySN(int sn) {
+    String selectProductQuery = "SELECT * FROM product WHERE sn = ?";
+    ProductModel product = null;
+
+    try (PreparedStatement preparedStatement = connection.prepareStatement(selectProductQuery)) {
+        preparedStatement.setInt(1, sn);
+        ResultSet resultSet = preparedStatement.executeQuery();
+
+        if (resultSet.next()) {
+            int serialNumber = resultSet.getInt("sn");
+            String name = resultSet.getString("name");
+            String description = resultSet.getString("description");
+            int price = resultSet.getInt("price");
+            int quantity = resultSet.getInt("quantity");
+            int validity = resultSet.getInt("validity");
+
+            // Create a new ProductModel object with retrieved data
+            product = new ProductModel(serialNumber, name, description, price, quantity, validity);
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+        // Handle exceptions accordingly
+    }
+
+    return product; // Return null if no product found with the given SN
+}
+
     // Inside ProductDAO class
     public List<String> getCategoriesForProduct(ProductModel product) {
         List<String> categoriesForProduct = new ArrayList<>();

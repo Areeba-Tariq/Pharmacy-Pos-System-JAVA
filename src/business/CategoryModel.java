@@ -1,7 +1,4 @@
 package business;
-        
-import java.util.ArrayList;
-import java.util.List;
 
 public class CategoryModel{
 
@@ -34,9 +31,8 @@ public class CategoryModel{
     public String getDescription() {
         return description;
     }
-    
+
     public void setDescription(String description) {
         this.description = description;
     }
-    
 }

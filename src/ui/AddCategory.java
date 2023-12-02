@@ -8,18 +8,10 @@ public class AddCategory extends javax.swing.JFrame {
     private CategoryService categoryService;
     private Category category;
 
-    // Constructor without arguments
     public AddCategory() {
         initComponents();
         categoryService = new CategoryService();
-        this.category = null; // Initialize without a reference
-    }
-
-    // Constructor with Category instance as argument
-    public AddCategory(Category category) {
-        initComponents();
-        categoryService = new CategoryService();
-        this.category = category; // Assign the reference to the Category class instance
+        this.category = category;
     }
 
 
@@ -152,6 +144,7 @@ public class AddCategory extends javax.swing.JFrame {
 
         // Create a new Category instance with the retrieved data
         CategoryModel newCategory = new CategoryModel(sn, name, description);
+        System.out.println("1");
         categoryService.addCategory(newCategory);
         if (category != null) {
             category._AddRow(newCategory);
