@@ -134,14 +134,14 @@ public class Cart extends javax.swing.JFrame {
         // TODO add your handling code here:
        String itemToBeSearched=searchField.getText();
        ProductService ps=new ProductService();
-       ProductModel p=ps.searchProduct(itemToBeSearched);
+    /*   ProductModel p=ps.searchProduct(itemToBeSearched);
        if(p.getName()==null)
        {
            JOptionPane.showMessageDialog(null, "Nothing Found", "Error", JOptionPane.ERROR_MESSAGE);
        } else {
                PopulateQuantityPage(p);
            
-        }
+        }*/
     }//GEN-LAST:event_searchBtnActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed

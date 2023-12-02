@@ -21,8 +21,8 @@ public class ProductService {
         pdao.deleteProduct(p);
     }
 
-    public void updateProduct(ProductModel p){
-       pdao.updateProduct(p);
+    public void updateProduct(ProductModel _p, ProductModel p){
+       pdao.updateProduct(_p, p);
     }
     
     public List<ProductModel> getProducts(){

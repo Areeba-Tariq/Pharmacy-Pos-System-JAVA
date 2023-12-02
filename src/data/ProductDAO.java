@@ -12,6 +12,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.JOptionPane;
 
 public class ProductDAO {
  
@@ -58,7 +59,6 @@ public class ProductDAO {
 
         try (PreparedStatement deleteFromProductCategoryStatement = connection.prepareStatement(deleteFromProductCategoryQuery);
              PreparedStatement deleteProductStatement = connection.prepareStatement(deleteProductQuery)) {
-
             connection.setAutoCommit(false);
 
             // Delete references to the product in the Product_Category table
@@ -92,6 +92,59 @@ public class ProductDAO {
     }
     
     
+    public void updateProduct(ProductModel old, ProductModel product) {
+            
+        deleteProduct(old);
+        addProduct(product);
+                
+              /*  String fetchProductQuery = "SELECT * FROM product WHERE sn = ?";
+                PreparedStatement stmtFetch = connection.prepareStatement(fetchProductQuery);
+                stmtFetch.setInt(1, product.getSn());
+                ResultSet rs = stmtFetch.executeQuery(); 
+               
+                
+ 
+                   String updateproductQuery = "UPDATE product SET name = ? WHERE id = ?";
+                   PreparedStatement stmtproduct = connection.prepareStatement(updateproductQuery);
+                   stmtproduct.setString(1, product.getName());
+                   stmtproduct.setString(2, product.getDescription());
+                   stmtproduct.setInt(3, product.getPrice());
+                   stmtproduct.setInt(4, product.getQuantity());
+                   stmtproduct.setInt(5, product.getValidity());
+                   stmtproduct.setInt(6, product.getSn());
+                   stmtproduct.executeUpdate();
+
+                    // Delete existing category for the product
+                    String deleteCategoryQuery = "DELETE FROM Product_Category WHERE product_sn = ?";
+                    PreparedStatement stmtCategory = connection.prepareStatement(deleteCategoryQuery);
+                    stmtCategory.setInt(1, product.getSn());
+                    stmtCategory.executeUpdate();
+                    
+                    
+                    String deleteProductQuery = "DELETE FROM Product WHERE sn = ?";
+                    PreparedStatement stmtProduct = connection.prepareStatement(deleteProductQuery);
+                    stmtCategory.setInt(1, product.getSn());
+                    stmtCategory.executeUpdate();
+                    
+                    // Insert or update skills
+                    String insertOrUpdateProductQuery = "INSERT INTO Product_Category (sn, name, description, price, quantity, validity) VALUES (?, ?, ?, ?, ?, ?)";
+
+                    try (PreparedStatement preparedStatement = connection.prepareStatement(insertOrUpdateProductQuery)) {
+                        preparedStatement.setInt(1, product.getSn());
+                        preparedStatement.setString(2, product.getName());
+                        preparedStatement.setString(3, product.getDescription());
+                        preparedStatement.setInt(4, product.getPrice());
+                        preparedStatement.setInt(5, product.getQuantity());
+                        preparedStatement.setInt(6, product.getValidity());
+                        preparedStatement.executeUpdate();
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                        // Handle exceptions accordingly
+                    }*/
+      
+    }
+    
+    /*
     public void updateProduct(ProductModel product, List<String> selectedCategories) {
         String updateProductQuery = "UPDATE product SET name=?, description=?, price=?, quantity=?, validity=? WHERE sn=?";
         String deleteFromProductCategoryQuery = "DELETE FROM Product_Category WHERE product_sn=?";
@@ -148,7 +201,7 @@ public class ProductDAO {
             }
         }
     }
-
+*/
     
     // Get all products from the database
     public List<ProductModel> getProducts() {

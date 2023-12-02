@@ -91,50 +91,50 @@ public class AddProduct extends JFrame {
 
     
     private void addBtnActionPerformed(java.awt.event.ActionEvent evt) {
-    // Extracting input values from the text fields
-    int sn, price, quantity, validity;
-    String name, description;
-  
-    try {
-        sn = Integer.parseInt(sntf.getText());
-        price = Integer.parseInt(pricetf.getText());
-        quantity = Integer.parseInt(quantitytf.getText());
-        name = nametf.getText();
-        description = desctf.getText();
-        validity = Integer.parseInt(exptf.getText());
-    } catch (NumberFormatException ex) {
-        javax.swing.JOptionPane.showMessageDialog(this, "Invalid input. Please enter numeric values.");
-        return;
-    }
+        // Extracting input values from the text fields
+        int sn, price, quantity, validity;
+        String name, description;
 
-    ProductModel newProduct = new ProductModel(sn, name, description, price, quantity, validity);
-    productService.addProduct(newProduct);
-    CategoryDAO categoryDAO = new CategoryDAO();
-    List<CategoryModel> categories = categoryDAO.getCategories();
+        try {
+            sn = Integer.parseInt(sntf.getText());
+            price = Integer.parseInt(pricetf.getText());
+            quantity = Integer.parseInt(quantitytf.getText());
+            name = nametf.getText();
+            description = desctf.getText();
+            validity = Integer.parseInt(exptf.getText());
+        } catch (NumberFormatException ex) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Invalid input. Please enter numeric values.");
+            return;
+        }
 
-    for (Component component : checkboxes.getComponents()) {
-        if (component instanceof JCheckBox) {
-            JCheckBox checkBox = (JCheckBox) component;
-            if (checkBox.isSelected()) {
-                String categoryName = checkBox.getText();
-                CategoryModel selectedCategory = categoryDAO.getCategoryByName(categoryName);
-                if (selectedCategory != null) {
-                    productDAO.addProductToCategory(newProduct, selectedCategory);
+        ProductModel newProduct = new ProductModel(sn, name, description, price, quantity, validity);
+        productService.addProduct(newProduct);
+        CategoryDAO categoryDAO = new CategoryDAO();
+        List<CategoryModel> categories = categoryDAO.getCategories();
+
+        for (Component component : checkboxes.getComponents()) {
+            if (component instanceof JCheckBox) {
+                JCheckBox checkBox = (JCheckBox) component;
+                if (checkBox.isSelected()) {
+                    String categoryName = checkBox.getText();
+                    CategoryModel selectedCategory = categoryDAO.getCategoryByName(categoryName);
+                    if (selectedCategory != null) {
+                        productDAO.addProductToCategory(newProduct, selectedCategory);
+                    }
                 }
             }
         }
+
+        // Clearing input fields after adding the product
+        nametf.setText("");
+        pricetf.setText("");
+        quantitytf.setText("");
+        desctf.setText("");
+        exptf.setText("");
+
+        javax.swing.JOptionPane.showMessageDialog(this, "Product added successfully!");
+        this.dispose();
     }
-
-    // Clearing input fields after adding the product
-    nametf.setText("");
-    pricetf.setText("");
-    quantitytf.setText("");
-    desctf.setText("");
-    exptf.setText("");
-
-    javax.swing.JOptionPane.showMessageDialog(this, "Product added successfully!");
-    this.dispose();
-}
 
     
     private JScrollPane createCategoryCheckboxesScrollPane() {

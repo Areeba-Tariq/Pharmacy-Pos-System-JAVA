@@ -21,6 +21,7 @@ import javax.swing.JPanel;
 public class EditProduct extends JFrame {
 
     private ProductService productService;
+    private List<ProductModel> products;  
     private final CategoryDAO categoryDAO;
     JTextField sntf = new JTextField();
     JTextField nametf = new JTextField();
@@ -32,6 +33,7 @@ public class EditProduct extends JFrame {
     private final JPanel btnPanel;
     private final JPanel fieldsPanel;
     private final ProductDAO productDAO;
+    private static int _sn;
     
      public EditProduct() {
         categoryDAO = new CategoryDAO();
@@ -92,7 +94,7 @@ public class EditProduct extends JFrame {
 
     
     private void editBtnActionPerformed(java.awt.event.ActionEvent evt) {
-        // Extracting input values from the text fields
+         // Extracting input values from the text fields
         int sn, price, quantity, validity;
         String name, description;
 
@@ -108,41 +110,52 @@ public class EditProduct extends JFrame {
             return;
         }
 
-        ProductModel updatedProduct = new ProductModel(sn, name, description, price, quantity, validity);
+        ProductModel oldProduct = getProductBySN(_sn);
+        ProductModel newProduct = new ProductModel(sn, name, description, price, quantity, validity);
+        productService.updateProduct(oldProduct, newProduct);
+        CategoryDAO categoryDAO = new CategoryDAO();
+        List<CategoryModel> categories = categoryDAO.getCategories();
 
-        // Get the list of selected categories from the checkboxes
-        List<String> selectedCategories = new ArrayList<>();
-        for (Component component : checkboxes.getComponents()) {
+        Component[] components = ((JPanel) ((JViewport) ((JScrollPane) checkboxes.getComponent(1)).getComponent(0)).getView()).getComponents();
+
+        for (Component component : components) {
             if (component instanceof JCheckBox) {
                 JCheckBox checkBox = (JCheckBox) component;
                 if (checkBox.isSelected()) {
-                    selectedCategories.add(checkBox.getText());
+                    String categoryName = checkBox.getText();
+                    CategoryModel selectedCategory = categoryDAO.getCategoryByName(categoryName);
+                    if (selectedCategory != null) {
+                        System.out.println("---3");
+                        productDAO.addProductToCategory(newProduct, selectedCategory);
+                    }
                 }
             }
         }
 
-        // Retrieve the product by SN
-        ProductDAO productDAO = new ProductDAO();
-        ProductModel existingProduct = productDAO.getProductBySN(sn);
+        // Clearing input fields after adding the product
+        sntf.setText("");
+        nametf.setText("");
+        pricetf.setText("");
+        quantitytf.setText("");
+        desctf.setText("");
+        exptf.setText("");
 
-// Delete the existing product
-productDAO.deleteProduct(existingProduct);
-
-        // Add the updated product
-        productDAO.addProduct(updatedProduct);
-
-        // Associate the updated product with selected categories
-        for (String categoryName : selectedCategories) {
-            CategoryModel category = categoryDAO.getCategoryByName(categoryName);
-            if (category != null) {
-                productDAO.addProductToCategory(updatedProduct, category);
-            }
-        }
-
-        javax.swing.JOptionPane.showMessageDialog(this, "Product updated successfully!");
+        javax.swing.JOptionPane.showMessageDialog(this, "Product added successfully!");
         this.dispose();
     }
 
+    
+    private ProductModel getProductBySN(int sn) {
+        // Find and return the CategoryDAO object by its SN
+        products = productService.getProducts();
+        for (ProductModel product : products) {
+            if (product.getSn() == sn) {
+                return product;
+            }
+        }
+        return null; // Return null if not found
+    }
+        
     
     private JScrollPane createCategoryCheckboxesScrollPane() {
         CategoryDAO categoryDAO = new CategoryDAO();
@@ -160,6 +173,11 @@ productDAO.deleteProduct(existingProduct);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 
         return scrollPane;
+    }
+    
+    
+    public void getSn(int sn){
+        _sn = sn;
     }
 
 

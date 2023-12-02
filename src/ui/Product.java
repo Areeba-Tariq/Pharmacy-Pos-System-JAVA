@@ -1,6 +1,7 @@
 package ui;
 import business.ProductService;
 import business.ProductModel;
+import ui.EditProduct;
 import data.ProductDAO;
 import java.util.List;
 import javax.swing.table.DefaultTableModel;
@@ -9,10 +10,12 @@ import javax.swing.table.DefaultTableModel;
 public class Product extends javax.swing.JFrame {
 
     private List<ProductModel> products;
+    private final EditProduct edit;
 
     public Product() {
         initComponents();
         populateProductTable();
+        edit = new EditProduct();
         
         // Add a listener to the table to handle row selection
         productTable.getSelectionModel().addListSelectionListener(e -> {
@@ -140,10 +143,10 @@ public class Product extends javax.swing.JFrame {
         int selectedRow = productTable.getSelectedRow();
         if (selectedRow != -1) {
             int sn = (int) productTable.getValueAt(selectedRow, 0); // Assuming SN is in the first column
-
+            edit.getSn(sn);
             EditProduct editProduct = new EditProduct();
-            editProduct.populateProductDetails(sn); // Pass the SN to the EditProduct screen for editing
             editProduct.setVisible(true);
+            populateProductTable(); // Pass the SN to the EditProduct screen for editing
         }
     }//GEN-LAST:event_editBtnActionPerformed
 
