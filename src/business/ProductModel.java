@@ -77,6 +77,16 @@ public class ProductModel {
         this.description = description;
     }
     
+    
+    public String getStatus(){
+        if(this.quantity == 0){
+            return "Not Available";
+        }
+        else{
+            return "Available";
+        }
+    }
+    
     // Method to get categories associated with the product
     public List<CategoryModel> getCategories() {
         return this.categories;

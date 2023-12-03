@@ -3,12 +3,10 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/eisha/Documents/NetBeansProjects/POS/src/ui/AddCategory.java</file>
+            <file>file:/C:/Users/eisha/Documents/NetBeansProjects/POS/src/ui/EditProduct.java</file>
+            <file>file:/C:/Users/eisha/Documents/NetBeansProjects/POS/src/ui/Category.java</file>
             <file>file:/C:/Users/eisha/Documents/NetBeansProjects/POS/src/ui/Product.java</file>
-            <file>file:/C:/Users/eisha/Documents/NetBeansProjects/POS/src/business/ProductModel.java</file>
             <file>file:/C:/Users/eisha/Documents/NetBeansProjects/POS/src/ui/AddProduct.java</file>
-            <file>file:/C:/Users/eisha/Documents/NetBeansProjects/POS/src/data/ProductDAO.java</file>
-            <file>file:/C:/Users/eisha/Documents/NetBeansProjects/POS/src/business/ProductService.java</file>
         </group>
     </open-files>
 </project-private>
