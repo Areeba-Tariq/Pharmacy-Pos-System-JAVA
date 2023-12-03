@@ -25,8 +25,8 @@ public class CategoryDAO {
         } catch (SQLException ex) {
             throw new RuntimeException("Error connecting to the database", ex);
         }
-        // Add more categories as needed
     }
+
 
     public List<CategoryModel> getCategories() {
         List<CategoryModel> categories = new ArrayList<>();
@@ -96,7 +96,6 @@ public class CategoryDAO {
             e.printStackTrace();
             // Handle exceptions accordingly
         }
-
         return category;
     }
     

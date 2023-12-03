@@ -268,7 +268,6 @@ public class ProductDAO {
         e.printStackTrace();
         // Handle exceptions accordingly
     }
-
     return product; // Return null if no product found with the given SN
 }
 
@@ -290,4 +289,7 @@ public class ProductDAO {
         }
         return categoriesForProduct;
     }
+    
+
+    
 }

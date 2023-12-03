@@ -6,6 +6,7 @@ import java.util.Calendar;
 import business.CategoryModel;
 import business.ProductService;
 import business.ProductModel;
+import ui.Product;
 import data.CategoryDAO;
 import data.ProductDAO;
 import java.awt.BorderLayout;
@@ -21,6 +22,7 @@ public class AddProduct extends JFrame {
 
     private ProductService productService;
     private final CategoryDAO categoryDAO;
+    private final Product add;
     JTextField sntf = new JTextField();
     JTextField nametf = new JTextField();
     JTextField quantitytf = new JTextField();
@@ -40,6 +42,7 @@ public class AddProduct extends JFrame {
         initComponents(); // Move initComponents after initializing checkboxes
         productService = new ProductService();
         productDAO = new ProductDAO();
+        add = new Product();
     }
 
 
@@ -88,7 +91,7 @@ public class AddProduct extends JFrame {
         setSize(450, 550);
         setLocationRelativeTo(null);
     }
-
+    
     
     private void addBtnActionPerformed(java.awt.event.ActionEvent evt) {
         // Extracting input values from the text fields
@@ -124,6 +127,7 @@ public class AddProduct extends JFrame {
                 }
             }
         }
+        add._Product(newProduct);
 
         // Clearing input fields after adding the product
         nametf.setText("");

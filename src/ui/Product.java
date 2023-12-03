@@ -1,21 +1,25 @@
 package ui;
 import business.ProductService;
 import business.ProductModel;
+import ui.AddProduct;
 import ui.EditProduct;
 import data.ProductDAO;
 import java.util.List;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
 
 
 public class Product extends javax.swing.JFrame {
 
     private List<ProductModel> products;
     private final EditProduct edit;
+    private final AddProduct add;
 
     public Product() {
         initComponents();
         populateProductTable();
         edit = new EditProduct();
+        add = new AddProduct();
         
         // Add a listener to the table to handle row selection
         productTable.getSelectionModel().addListSelectionListener(e -> {
@@ -28,8 +32,26 @@ public class Product extends javax.swing.JFrame {
         });
     }
 
-    
     @SuppressWarnings("unchecked")
+    
+    public void _Product(ProductModel pro){
+         ProductDAO productDAO = new ProductDAO();
+         DefaultTableModel model = (DefaultTableModel) productTable.getModel();
+          List<String> categoriesForProduct = productDAO.getCategoriesForProduct(pro);
+            String categoryList = String.join(", ", categoriesForProduct);
+
+            Object[] rowData = {
+                pro.getSn(),
+                pro.getName(),
+                categoryList, // Categories as a comma-separated string
+                pro.getPrice(),
+                pro.getQuantity(),
+                pro.getValidity(),
+                pro.getDescription()
+            };
+            model.addRow(rowData);
+    }
+    
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
@@ -152,7 +174,6 @@ public class Product extends javax.swing.JFrame {
 
     
     
-    
     private void delBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_delBtnActionPerformed
         int selectedRow = productTable.getSelectedRow();
         if (selectedRow != -1) { // Ensure a row is selected
@@ -193,6 +214,8 @@ public class Product extends javax.swing.JFrame {
     
     // Inside Product.java class
     public void populateProductTable() {
+         TableColumn column = productTable.getColumnModel().getColumn(2);
+        column.setPreferredWidth(150);
         ProductDAO productDAO = new ProductDAO();
         products = productDAO.getProducts();
 
